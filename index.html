@@ -328,8 +328,8 @@ let base = "claro", baseTouched = false, allGeom = false;
 const autoGeom = new Set();
 const mobile = () => matchMedia("(max-width:860px)").matches;
 const BASES = {
-  claro:   {url:"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", att:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', dark:false},
-  oscuro:  {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",  att:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', dark:true},
+  claro:   {url:"https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", att:'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ', dark:false, nz:16},
+  oscuro:  {url:"https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",  att:'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ', dark:true, nz:16},
   calles:  {url:"https://tile.openstreetmap.org/{z}/{x}/{y}.png", att:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', dark:false},
   satelite:{url:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", att:'Imágenes &copy; Esri, Maxar, Earthstar Geographics', dark:true}
 };
@@ -351,7 +351,7 @@ function setBase(name){
   base = name;
   if (baseLayer) map.removeLayer(baseLayer);
   const b = BASES[name];
-  baseLayer = L.tileLayer(b.url, {attribution:b.att, maxZoom:19, subdomains:"abcd", crossOrigin:true}).addTo(map);
+  baseLayer = L.tileLayer(b.url, {attribution:b.att, maxZoom:19, maxNativeZoom:b.nz||19, crossOrigin:true}).addTo(map);
   document.querySelectorAll("#baseSeg button").forEach(x => x.setAttribute("aria-pressed", x.dataset.base === name));
   Object.keys(geom).forEach(k => { const was = geomOn.has(k); delete geom[k]; if (was) { geomOn.delete(k); showGeom(k, true); } });
 }
